@@ -1,0 +1,15 @@
+---
+title: "hw1"
+output: pdf_document
+---
+
+Q2:
+
+a) Better. With larger sample size and smaller number of predictors, we can conclude that the points 
+will be closer to each other so the flexible method will fit the data better and closer and for an infliexible method the error will be higher (performance will be worse)
+
+b) Worse. With smaller number of predictors and smaller sample size, the distance between points will be larger so that the neighbors of x0 may not be very similar to x0 which will result misclassification and overfitting. As a result, an inflexible method will perform better. 
+
+c) Better. When the relationship between predictors and response is highly nonlinear, such distribution of data is complicated so we need a flexible method to fit the data. 
+
+d) Worse. The variance of the model depends on the variance of error term σ2, which is σ2/K. Since we want to keep the error low, and when σ2 is large, we need to make K big enough, which means flexible method will perform worse. 

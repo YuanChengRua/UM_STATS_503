@@ -1,0 +1,73 @@
+---
+title: "test"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r,include=FALSE}
+train_data = read.csv("E:\\diabetes_train.csv")
+test_data = read.csv("E:\\diabetes_test.csv")
+
+library(funModeling) 
+library(tidyverse) 
+library(Hmisc)
+library(ggplot2)
+library(class)
+library(GGally)
+```
+
+```{r}
+basic_eda <- function(data)
+{
+  glimpse(data)
+  print(status(data))
+  freq(data)
+  print(profiling_num(data))
+  plot_num(data)
+  describe(data)
+}
+
+status(train_data)
+#From the table shown, we can conclude the percertanges of zeros, N/A, inf. And the table shows that there are 223 0s, which correspond
+#52.1% of total outcome. The zeros represents the cases of not having diabetes
+freq(train_data$Outcome)#To view the percertage of the outcomes
+train_data_prof=profiling_num(train_data)
+#Check the mean, std_dev of each variable
+#Check the relationship between each pair of two variables.
+df = train_data[, c("Pregnancies", "Glucose", 
+                    "BloodPressure", "SkinThickness", "Insulin", "BMI", 
+                    "DiabetesPedigreeFunction", "Age", "Outcome")]
+ggpairs(df, title="correlogram with ggpairs()")
+#Check the correlations between each pair of two variables.
+
+x_train = train_data[,1:8]
+y_train = train_data$Outcome
+x_test = test_data[,1:8]
+y_test = test_data$Outcome
+
+scaled_x_train = scale(x_train)
+scaled_x_test = scale(x_test)
+
+k = 1:20
+test_error <- rep(x = 0, times = length(k))
+train_error <- rep(x = 0, times = length(k))
+
+for (i in seq_along(k)) {
+  pred <- knn(train = scaled_x_train, test  = scaled_x_test, cl = y_train, k = k[i])
+  test_error[i] <- mean(y_test != pred)
+}
+
+for (j in seq_along(k)){
+  pred <- knn(train=scaled_x_train, test = scaled_x_train, cl = y_train, k = k[j])
+  train_error[j] <- mean(y_train != pred)
+}
+
+matplot(cbind(test_error,train_error),type="b",col=c("red","green"), 
+        lend = par("lend"), ylab = "Error", xlab = "Model Complexity (1/K)",
+        main = "Training and Testing Error")
+
+```
+
+
